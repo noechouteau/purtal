@@ -17,3 +17,16 @@ body
     left: 0;
     outline: none;
 }
+
+h1{
+    text-align: center;
+    position: absolute;
+    top: 25px;
+    font-size: 19px;
+    width: 100%;
+    font-weight: 100;
+    color: white;
+    color: rgba(236, 236, 238, 0.495);
+    font-style: italic;
+    font-family: monospace;
+}

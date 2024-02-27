@@ -65,9 +65,6 @@ camera.position.z = 2
 camera.lookAt(new THREE.Vector3(0, 0, 0))
 scene.add(camera)
 
-gui.add(camera.position, "y").min(0).max(10).step(0.01).name("cameraY")
-gui.add(camera.position, "z").min(0).max(10).step(0.01).name("cameraZ")
-
 
 // Controls
 const controls = new OrbitControls(camera, renderer.domElement)
@@ -395,9 +392,6 @@ const firefliesMaterial = new THREE.ShaderMaterial({
     blending: THREE.AdditiveBlending,
     depthWrite: false
 })
-
-
-gui.add(firefliesMaterial.uniforms.uSize,"value").min(0).max(500).step(1).name("firefliesSize")
 
 //Points
 const fireflies = new THREE.Points(firefliesGeometry,firefliesMaterial)
