@@ -30,3 +30,42 @@ h1{
     font-style: italic;
     font-family: monospace;
 }
+
+.loading-bar{
+    top: 60%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    background: rgba(236, 236, 238, 0.253);
+    height: 3px;
+    opacity: 1;
+    border-radius: 7px;
+    transition: 0.5s ease;
+    color: rgba(236, 236, 238, 0.495);
+    font-style: italic;
+    font-family: monospace;
+    text-align: center;
+    z-index: 1;
+
+}
+
+.loading-bar p{
+    margin-top:7px;
+}
+
+.progress {
+    content: '';
+    width: 250px;
+    height: 3px;
+    opacity: 1;
+    border-radius: 7px;
+    transform:scaleX(0);
+    background: rgb(255, 255, 255);
+    transition: 0.5s ease;
+    z-index: 1;
+  }
+
+.ended{
+    opacity: 0;
+}

@@ -12,10 +12,50 @@ import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
 import portalVertexShader from './shaders/portal/vertex.glsl'
 import portalFragmentShader from './shaders/portal/fragment.glsl'
 
+const loadingBarContainer = document.querySelector('.loading-bar')
+const loadingBarElement = document.querySelector('.progress')
+const waitText = document.querySelector('#waitText')
+const launchText = document.querySelector('#launchText')
+const helpTitle = document.querySelector('#helpTitle')
+
+const loadingManager = new THREE.LoadingManager(
+  () =>
+  {
+      // console.log('loaded')
+      waitText.classList.add('ended')
+      waitText.style.display = 'none'
+      launchText.classList.remove('ended')
+      gsap.delayedCall(1., () =>
+      {
+          gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0, delay: 1 }).then(() =>
+          {
+            scene.remove(overlay)
+          }
+          )
+          loadingBarContainer.style.opacity = '0'
+          gsap.delayedCall(1, () =>
+          {
+              loadingBarContainer.style.display = 'none'
+              launchText.style.opacity = '0'
+              gui.show();
+              helpTitle.classList.remove('ended')
+          })
+
+      })
+  },
+  ( itemsUrl, itemsLoaded, itemsTotal) =>
+  {
+      // console.log(itemsLoaded, itemsTotal)
+      const progressRatio = itemsLoaded / itemsTotal
+      // console.log(progressRatio)
+      loadingBarElement.style.transform = `scaleX(${progressRatio})`
+  }
+)
 
 const debugObject = {}
 const gui = new dat.GUI();
-const loader = new GLTFLoader();
+const loader = new GLTFLoader(loadingManager);
+gui.hide();
 
 const mapLayers = new Map();
 mapLayers.set("inside", 1);
@@ -31,7 +71,7 @@ let isInsidePortal = false;
 let wasOutside = true;
 
 const resolution = new THREE.Vector2();
-const textureLoader = new THREE.TextureLoader()
+const textureLoader = new THREE.TextureLoader(loadingManager)
 
 
 // Setup Renderer
@@ -57,6 +97,34 @@ function resizePortalRenderTarget(width, height) {
 
 // Setup Scene
 const scene = new THREE.Scene();
+
+/** 
+ * Overlay
+ */
+
+const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
+const overlayMaterial = new THREE.ShaderMaterial({
+    transparent: true,
+    uniforms: {
+        uAlpha: { value: 1 }
+    },
+    vertexShader: `
+        void main()
+        {
+            gl_Position =  vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform float uAlpha;
+
+        void main()
+        {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
+        }
+    `,
+})
+const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+scene.add(overlay)
 
 // Setup Camera and Controls
 const camera = new THREE.PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 100)

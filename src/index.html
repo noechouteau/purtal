@@ -9,7 +9,14 @@
 </head>
 <body>
     <canvas class="webgl"></canvas>
-    <h1>Hold your left click to see a new world</h1>
+    <h1 id="helpTitle" class="ended">Hold your left click to see a new world</h1>
+
+    <div class="loading-bar">
+        <div class="progress"></div>
+        <p id="waitText">Please wait while the assets are loading...</p>
+        <p id="launchText" class="ended">Finished !</p>
+    </div>
+
     <script type="module" src="./script.js"></script>
 </body>
 </html>
